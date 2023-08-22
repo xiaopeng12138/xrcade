@@ -1,12 +1,13 @@
 
 # Xrcade
+
 **An open-source arcade simulation system for XR devices based on Unity.**
 
 ## What is Xrcade?
 
 Xrcade is a project that simulates arcade cabinets on XR-supported devices. It is similar to VRChat but specifically designed for arcade games. Xrcade provides the fundamental VR interaction environment, and support for different cabinets can be added through "Steam Workshop" mods or an official Git list.
 
-## The plan includes the following features:
+## The plan includes the following features
 
 - Custom cabinet support
 - Custom environment support
@@ -15,7 +16,8 @@ Xrcade is a project that simulates arcade cabinets on XR-supported devices. It i
 - Lobby system (via Steam)
 - Cross-cabinet functionality (different games in the same room)
 
-## To-do list:
+## To-do list
+
 - [ ] Basic VR interaction
 - [ ] Start menu
 - [ ] Cabinet selection implementation
