@@ -1,7 +1,7 @@
 
 # Xrcade
 
-**An open-source arcade simulation system for XR devices based on Unity.**
+**An open-source arcade simulation system for XR devices based on Unity (Will be soon changed to Godot).**
 
 ## What is Xrcade?
 
@@ -18,6 +18,7 @@ Xrcade is a project that simulates arcade cabinets on XR-supported devices. It i
 
 ## To-do list
 
+- [ ] Switch from Unity to Godot
 - [ ] Basic VR interaction
 - [ ] Start menu
 - [ ] Cabinet selection implementation
