@@ -27,16 +27,19 @@ size = Vector2(5, 5)
 [node name="XROrigin" type="XROrigin3D" parent="."]
 
 [node name="XRCamera" type="XRCamera3D" parent="XROrigin"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
 current = true
 far = 100.0
 
 [node name="Right Hand" type="XRController3D" parent="XROrigin"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1.4, -0.25)
 tracker = &"right_hand"
 
 [node name="Sphere" type="MeshInstance3D" parent="XROrigin/Right Hand"]
 mesh = SubResource("SphereMesh_tf6b7")
 
 [node name="Left Hand" type="XRController3D" parent="XROrigin"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 1.4, -0.25)
 tracker = &"left_hand"
 
 [node name="Sphere" type="MeshInstance3D" parent="XROrigin/Left Hand"]
