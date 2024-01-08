@@ -11,13 +11,24 @@ config_version=5
 [application]
 
 config/name="xrcade"
-run/main_scene="res://Scenes/main.tscn"
+config/version="0.0.1"
+run/main_scene="res://Scenes/UI/start_up_menu.tscn"
 config/features=PackedStringArray("4.2", "C#", "Mobile")
+boot_splash/bg_color=Color(0, 0, 0, 1)
+boot_splash/show_image=false
 config/icon="res://icon.svg"
 
 [autoload]
 
 XRToolsUserSettings="*res://addons/godot-xr-tools/user_settings/user_settings.gd"
+MaterialIconsDB="*res://addons/material-design-icons/icons/icons.gd"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 
 [dotnet]
 
@@ -25,7 +36,19 @@ project/assembly_name="xrcade"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/gd-blender-3d-shortcuts/plugin.cfg", "res://addons/godot-xr-tools/plugin.cfg")
+enabled=PackedStringArray("res://addons/godot-xr-tools/plugin.cfg", "res://addons/material-design-icons/plugin.cfg", "res://addons/usd/plugin.cfg")
+
+[filesystem]
+
+import/fbx/enabled=false
+
+[godot_xr_tools]
+
+player/standard_height=1.8
+
+[gui]
+
+theme/custom="res://Themes/default_theme.tres"
 
 [layer_names]
 
@@ -39,11 +62,16 @@ enabled=PackedStringArray("res://addons/gd-blender-3d-shortcuts/plugin.cfg", "re
 3d_physics/layer_21="Pointable"
 3d_physics/layer_22="Hand Pose Area"
 
+[physics]
+
+3d/run_on_separate_thread=true
+common/physics_ticks_per_second=120
+common/max_physics_steps_per_frame=4
+
 [rendering]
 
 renderer/rendering_method="mobile"
 
 [xr]
 
-openxr/enabled=true
 shaders/enabled=true

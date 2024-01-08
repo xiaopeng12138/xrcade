@@ -18,8 +18,8 @@ Xrcade is a project that simulates arcade cabinets on XR-supported devices. It i
 
 ## To-do list
 
-- [ ] Switch from Unity to Godot
-- [ ] Basic VR interaction
+- [x] Switch from Unity to Godot
+- [x] Basic VR interaction
 - [ ] Start menu
 - [ ] Cabinet selection implementation
   - [ ] Cabinet browser

@@ -146,13 +146,14 @@ func load_scene(p_scene_path : String, user_data = null) -> void:
 	if !xr_camera:
 		return
 
+	# Start the threaded loading of the scene. If the scene is already cached
+	# then this will finish immediately with THREAD_LOAD_LOADED
+	ResourceLoader.load_threaded_request(p_scene_path)
+
+	# If a current scene is visible then fade it out and unload it.
 	if current_scene:
-		# Start by unloading our scene
-
-		# Let the scene know we're about to remove it
+		# Report pre-exiting and remove the scene signals
 		current_scene.scene_pre_exiting(user_data)
-
-		# Remove signals
 		_remove_signals(current_scene)
 
 		# Fade to black
@@ -168,6 +169,11 @@ func load_scene(p_scene_path : String, user_data = null) -> void:
 		$Scene.remove_child(current_scene)
 		current_scene.queue_free()
 		current_scene = null
+
+	# If a continue-prompt is desired or the new scene has not finished
+	# loading, then switch to the loading screen.
+	if prompt_for_continue or \
+		ResourceLoader.load_threaded_get_status(p_scene_path) != ResourceLoader.THREAD_LOAD_LOADED:
 
 		# Make our loading screen visible again and reset some stuff
 		xr_origin.set_process_internal(true)
@@ -186,48 +192,51 @@ func load_scene(p_scene_path : String, user_data = null) -> void:
 		_tween.tween_method(set_fade, 1.0, 0.0, 1.0)
 		await _tween.finished
 
-	# Load the new scene
-	var new_scene : PackedScene
-	if ResourceLoader.has_cached(p_scene_path):
-		# Load cached scene
-		new_scene = ResourceLoader.load(p_scene_path)
-	else:
-		# Start the loading in a thread
-		ResourceLoader.load_threaded_request(p_scene_path)
-
+	# If the loading screen is visible then show the progress and optionally
+	# wait for the continue. Once done fade out the loading screen.
+	if $LoadingScreen.visible:
 		# Loop waiting for the scene to load
+		var res : ResourceLoader.ThreadLoadStatus
 		while true:
 			var progress := []
-			var res := ResourceLoader.load_threaded_get_status(p_scene_path, progress)
+			res = ResourceLoader.load_threaded_get_status(p_scene_path, progress)
 			if res != ResourceLoader.THREAD_LOAD_IN_PROGRESS:
 				break;
 
 			$LoadingScreen.progress = progress[0]
 			await get_tree().create_timer(0.1).timeout
 
-		# Get the loaded scene
-		new_scene = ResourceLoader.load_threaded_get(p_scene_path)
+		# Handle load error
+		if res != ResourceLoader.THREAD_LOAD_LOADED:
+			# Report the error to the log and console
+			push_error("Error ", res, " loading resource ", p_scene_path)
 
-	# Wait for user to be ready
-	if prompt_for_continue:
-		$LoadingScreen.enable_press_to_continue = true
-		await $LoadingScreen.continue_pressed
+			# Halt if running in the debugger
+			# gdlint:ignore=expression-not-assigned
+			breakpoint
 
-	# Fade to black
-	if _tween:
-		_tween.kill()
-	_tween = get_tree().create_tween()
-	_tween.tween_method(set_fade, 0.0, 1.0, 1.0)
-	await _tween.finished
+			# Terminate with a non-zero error code to indicate failure
+			get_tree().quit(1)
 
-	# Hide our loading screen
-	$LoadingScreen.follow_camera = false
-	$LoadingScreen.visible = false
+		# Wait for user to be ready
+		if prompt_for_continue:
+			$LoadingScreen.enable_press_to_continue = true
+			await $LoadingScreen.continue_pressed
 
-	# Turn off internal process on our FPController, the internal process
-	# of our XROrigin3D will submit its positioning data to the XRServer.
-	# With two XROrigin3D nodes we'll get competing data.
-	xr_origin.set_process_internal(false)
+		# Fade to black
+		if _tween:
+			_tween.kill()
+		_tween = get_tree().create_tween()
+		_tween.tween_method(set_fade, 0.0, 1.0, 1.0)
+		await _tween.finished
+
+		# Hide our loading screen
+		$LoadingScreen.follow_camera = false
+		$LoadingScreen.visible = false
+		xr_origin.set_process_internal(false)
+
+	# Get the loaded scene
+	var new_scene : PackedScene = ResourceLoader.load_threaded_get(p_scene_path)
 
 	# Setup our new scene
 	current_scene = new_scene.instantiate()
@@ -247,6 +256,7 @@ func load_scene(p_scene_path : String, user_data = null) -> void:
 	_tween.tween_method(set_fade, 1.0, 0.0, 1.0)
 	await _tween.finished
 
+	# Report new scene visible
 	current_scene.scene_visible(user_data)
 	scene_visible.emit(current_scene, user_data)
 
