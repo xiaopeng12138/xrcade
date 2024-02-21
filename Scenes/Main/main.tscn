@@ -23,8 +23,8 @@ radius = 0.035
 [sub_resource type="PlaneMesh" id="PlaneMesh_gd6ke"]
 size = Vector2(5, 5)
 
-[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_clbe4"]
-data = PackedVector3Array(2.5, 0, 2.5, -2.5, 0, 2.5, 2.5, 0, -2.5, -2.5, 0, 2.5, -2.5, 0, -2.5, 2.5, 0, -2.5)
+[sub_resource type="BoxShape3D" id="BoxShape3D_rm76v"]
+size = Vector3(5, 0.01, 5)
 
 [node name="Main" type="Node3D"]
 
@@ -37,6 +37,8 @@ top_level = true
 script = ExtResource("2_ip3p7")
 
 [node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.530611, 1.30308, 0)
+fov = 60.0
 
 [node name="VRCommonShaderCache" parent="XROrigin3D/XRCamera3D" instance=ExtResource("3_tbps0")]
 
@@ -87,15 +89,16 @@ environment = ExtResource("2_g3f7k")
 camera_attributes = SubResource("CameraAttributesPractical_17xcq")
 
 [node name="Floor" type="MeshInstance3D" parent="SceneRoot/WorldRoot/StartUpWorld"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.00711768, 0)
 mesh = SubResource("PlaneMesh_gd6ke")
 skeleton = NodePath("../WorldEnvironment")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="SceneRoot/WorldRoot/StartUpWorld/Floor"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SceneRoot/WorldRoot/StartUpWorld/Floor/StaticBody3D"]
-shape = SubResource("ConcavePolygonShape3D_clbe4")
+shape = SubResource("BoxShape3D_rm76v")
 
 [node name="CabinetRoot" type="Node3D" parent="SceneRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.52163)
 
 [node name="DXCab2023" parent="SceneRoot/CabinetRoot" instance=ExtResource("3_agr6x")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.96994)
