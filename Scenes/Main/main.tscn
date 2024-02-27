@@ -1,6 +1,7 @@
-[gd_scene load_steps=13 format=3 uid="uid://beac62q2a6gp2"]
+[gd_scene load_steps=14 format=3 uid="uid://beac62q2a6gp2"]
 
 [ext_resource type="PackedScene" uid="uid://clc5dre31iskm" path="res://addons/godot-xr-tools/xr/start_xr.tscn" id="1_0ke8r"]
+[ext_resource type="Script" path="res://Scripts/XRHaptic.cs" id="2_3vcye"]
 [ext_resource type="Environment" uid="uid://bk0d4y3ll7te5" path="res://Environments/DefautEnvironment.tres" id="2_g3f7k"]
 [ext_resource type="Script" path="res://addons/godot-xr-tools/player/player_body.gd" id="2_ip3p7"]
 [ext_resource type="PackedScene" uid="uid://cpvwex1batqj6" path="res://Scenes/MaiDXR/dx_cab_2023.tscn" id="3_agr6x"]
@@ -32,12 +33,15 @@ size = Vector3(5, 0.01, 5)
 
 [node name="XROrigin3D" type="XROrigin3D" parent="."]
 
+[node name="XRHaptic" type="Node" parent="XROrigin3D"]
+script = ExtResource("2_3vcye")
+
 [node name="XRToolsPlayerBody" type="CharacterBody3D" parent="XROrigin3D"]
 top_level = true
 script = ExtResource("2_ip3p7")
 
 [node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.530611, 1.30308, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01455, 0)
 fov = 60.0
 
 [node name="VRCommonShaderCache" parent="XROrigin3D/XRCamera3D" instance=ExtResource("3_tbps0")]
@@ -45,31 +49,33 @@ fov = 60.0
 [node name="LeftHand" type="XRController3D" parent="XROrigin3D"]
 tracker = &"left_hand"
 
-[node name="Sphere2" type="MeshInstance3D" parent="XROrigin3D/LeftHand"]
+[node name="LSphere" type="MeshInstance3D" parent="XROrigin3D/LeftHand"]
 mesh = SubResource("SphereMesh_hy7gp")
 skeleton = NodePath("")
 
-[node name="RigidBody3D" type="Area3D" parent="XROrigin3D/LeftHand/Sphere2"]
+[node name="LRigidBody3D" type="Area3D" parent="XROrigin3D/LeftHand/LSphere"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="XROrigin3D/LeftHand/Sphere2/RigidBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="XROrigin3D/LeftHand/LSphere/LRigidBody3D"]
 shape = SubResource("SphereShape3D_0lqkd")
 
 [node name="MovementTurn" parent="XROrigin3D/LeftHand" instance=ExtResource("4_fjhu8")]
+step_turn_angle = 5.0
 
 [node name="RightHand" type="XRController3D" parent="XROrigin3D"]
 tracker = &"right_hand"
 
-[node name="Sphere" type="MeshInstance3D" parent="XROrigin3D/RightHand"]
+[node name="RSphere" type="MeshInstance3D" parent="XROrigin3D/RightHand"]
 mesh = SubResource("SphereMesh_hy7gp")
 skeleton = NodePath("")
 
-[node name="RigidBody3D" type="Area3D" parent="XROrigin3D/RightHand/Sphere"]
+[node name="RRigidBody3D" type="Area3D" parent="XROrigin3D/RightHand/RSphere"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="XROrigin3D/RightHand/Sphere/RigidBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="XROrigin3D/RightHand/RSphere/RRigidBody3D"]
 shape = SubResource("SphereShape3D_0lqkd")
 
 [node name="MovementDirect" parent="XROrigin3D/RightHand" instance=ExtResource("5_lsmpy")]
-max_speed = 1.0
+max_speed = 0.35
+strafe = true
 
 [node name="SceneRoot" type="Node3D" parent="."]
 
@@ -79,7 +85,6 @@ max_speed = 1.0
 
 [node name="SpotLight3D" type="SpotLight3D" parent="SceneRoot/WorldRoot/StartUpWorld"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 3.63684, 0.0337706)
-light_energy = 2.0
 shadow_enabled = true
 spot_range = 6.49234
 spot_angle = 45.2541
