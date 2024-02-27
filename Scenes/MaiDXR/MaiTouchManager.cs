@@ -3,7 +3,7 @@ using System.IO.Ports;
 using System;
 using System.Collections;
 using System.Threading;
-public partial class MaiSerialManager : Node
+public partial class MaiTouchManager : Node
 {
     static SerialPort p1Serial = new SerialPort ("COM5", 9600);
     static SerialPort p2Serial = new SerialPort ("COM6", 9600);
@@ -19,7 +19,7 @@ public partial class MaiSerialManager : Node
     {
         try
         {
-            GD.Print("Try start Serial");
+            GD.Print("Try start Touch Serial");
             p1Serial.Open();
             p2Serial.Open();
         }
@@ -37,7 +37,10 @@ public partial class MaiSerialManager : Node
     public override void _Process(double delta)
     {
         if (Input.IsKeyPressed(Key.T))
-            startUp = !startUp;
+        {
+            GD.Print("force touch");
+            startUp = true;
+        }
     }
 	private void OnPingTouchThreadTimerTimeout()
 	{
@@ -62,7 +65,7 @@ public partial class MaiSerialManager : Node
             }
         }
     }
-    private void OnDestroy()
+    public override void _ExitTree()
     {
         touchThread.Abort();
         p1Serial.Close();
