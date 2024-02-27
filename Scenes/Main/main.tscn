@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://beac62q2a6gp2"]
+[gd_scene load_steps=16 format=3 uid="uid://beac62q2a6gp2"]
 
 [ext_resource type="PackedScene" uid="uid://clc5dre31iskm" path="res://addons/godot-xr-tools/xr/start_xr.tscn" id="1_0ke8r"]
 [ext_resource type="Script" path="res://Scripts/XRHaptic.cs" id="2_3vcye"]
@@ -10,14 +10,26 @@
 [ext_resource type="PackedScene" uid="uid://bl2nuu3qhlb5k" path="res://addons/godot-xr-tools/functions/movement_direct.tscn" id="5_lsmpy"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_hy7gp"]
-radius = 0.035
-height = 0.07
-radial_segments = 32
+radius = 0.038
+height = 0.075
+radial_segments = 24
 rings = 16
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_28fui"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+albedo_color = Color(1, 0.470513, 0.25174, 0.286275)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_0lqkd"]
 margin = 0.001
 radius = 0.035
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v6e7e"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+albedo_color = Color(1.92523e-06, 0.704037, 0.955942, 0.286275)
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_17xcq"]
 
@@ -50,8 +62,10 @@ fov = 60.0
 tracker = &"left_hand"
 
 [node name="LSphere" type="MeshInstance3D" parent="XROrigin3D/LeftHand"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.0407544)
 mesh = SubResource("SphereMesh_hy7gp")
 skeleton = NodePath("")
+surface_material_override/0 = SubResource("StandardMaterial3D_28fui")
 
 [node name="LRigidBody3D" type="Area3D" parent="XROrigin3D/LeftHand/LSphere"]
 
@@ -65,8 +79,10 @@ step_turn_angle = 5.0
 tracker = &"right_hand"
 
 [node name="RSphere" type="MeshInstance3D" parent="XROrigin3D/RightHand"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.0407544)
 mesh = SubResource("SphereMesh_hy7gp")
 skeleton = NodePath("")
+surface_material_override/0 = SubResource("StandardMaterial3D_v6e7e")
 
 [node name="RRigidBody3D" type="Area3D" parent="XROrigin3D/RightHand/RSphere"]
 
