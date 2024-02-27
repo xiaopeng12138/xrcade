@@ -7,34 +7,44 @@ public partial class MaiTouchArea : Area3D
 {
 	[Export]
 	private bool isPlayer1 = true;
-	private MaiSerialManager.TouchArea touchAarea;
-	private int _insideColliderCount = 0;
+	private MaiTouchManager.TouchArea touchAarea;
+	private int insideColliderCount = 0;
 	public static event Action touchDidChange;
 	public override void _Ready()
 	{
 		this.AreaEntered += OnTochEntered; 
 		this.AreaExited += OnTochExited;
-		touchAarea = (MaiSerialManager.TouchArea)Enum.Parse(typeof(MaiSerialManager.TouchArea), this.Name);
+		touchAarea = (MaiTouchManager.TouchArea)Enum.Parse(typeof(MaiTouchManager.TouchArea), this.Name);
 	}
 
 	private void OnTochEntered(Area3D area)
 	{
-		GD.Print(this.Name + "Touch Entered");
-		_insideColliderCount += 1;
-		MaiSerialManager.ChangeTouch(isPlayer1, touchAarea, true);
+		GD.Print(this.Name + "Touch Entered" + "with " + area.Name);
+		insideColliderCount += 1;
+		MaiTouchManager.ChangeTouch(isPlayer1, touchAarea, true);
         touchDidChange?.Invoke();
+
+		if (area.Name.ToString()[0] == 'L')
+			XRHaptic.SendHapticPulse(XRHaptic.Hand.Left, XRHaptic.HapticType.Medium);
+		else if (area.Name.ToString()[0] == 'R')
+			XRHaptic.SendHapticPulse(XRHaptic.Hand.Right, XRHaptic.HapticType.Medium);
 	}
 
 	private void OnTochExited(Area3D area)
 	{
-		GD.Print(this.Name + "Touch Exited");
-		_insideColliderCount -= 1;
-        if (_insideColliderCount <= 0)
+		GD.Print(this.Name + "Touch Exited" + "with " + area.Name);
+		insideColliderCount -= 1;
+        if (insideColliderCount <= 0)
         {
-            MaiSerialManager.ChangeTouch(isPlayer1, touchAarea, false);
+            MaiTouchManager.ChangeTouch(isPlayer1, touchAarea, false);
             touchDidChange?.Invoke();
-			_insideColliderCount = 0;
+			insideColliderCount = 0;
         }
+
+		if (area.Name.ToString()[0] == 'L')
+			XRHaptic.SendHapticPulse(XRHaptic.Hand.Left, XRHaptic.HapticType.Light);
+		else if (area.Name.ToString()[0] == 'R')
+			XRHaptic.SendHapticPulse(XRHaptic.Hand.Right, XRHaptic.HapticType.Light);
 	}
 	
 }
