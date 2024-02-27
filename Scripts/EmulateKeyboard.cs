@@ -22,6 +22,7 @@ public static class EmulateKeyboard
 }
 public enum VirtualKeyCode
 {
+	NULL = 0,
 	LBUTTON = 1,
 	RBUTTON = 2,
 	CANCEL = 3,
