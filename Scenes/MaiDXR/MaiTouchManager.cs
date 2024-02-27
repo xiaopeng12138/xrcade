@@ -67,7 +67,7 @@ public partial class MaiTouchManager : Node
     }
     public override void _ExitTree()
     {
-        touchThread.Abort();
+        touchThread.Interrupt();
         p1Serial.Close();
         p2Serial.Close();
     }
