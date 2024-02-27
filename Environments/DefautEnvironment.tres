@@ -6,5 +6,4 @@
 sky_material = SubResource("ProceduralSkyMaterial_igaq3")
 
 [resource]
-background_mode = 2
 sky = SubResource("Sky_xjjar")
